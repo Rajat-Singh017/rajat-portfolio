@@ -1,0 +1,17 @@
+# Firebase Configuration Example
+# Copy these variables to your .env.local file
+
+# These variables match the ones used in app/firebase.ts
+NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-auth-domain
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-storage-bucket
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
+NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your-measurement-id
+
+# Instructions:
+# 1. Create a Firebase project at https://console.firebase.google.com/
+# 2. Navigate to Project Settings > General
+# 3. Scroll down to "Your apps" section and get the config values
+# 4. Create a .env.local file and paste these variables with your actual Firebase config 

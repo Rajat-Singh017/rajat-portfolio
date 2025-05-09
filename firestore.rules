@@ -1,0 +1,53 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Projects collection - anyone can read, only authenticated users can write
+    match /projects/{projectId} {
+      // Allow reading projects for everyone
+      allow read: if true;
+      
+      // Allow writing projects only for authenticated users (you can update this to use specific admin roles)
+      allow write: if request.auth != null;
+    }
+    
+    // Messages collection - anyone can create, only authenticated users can read/update/delete
+    match /messages/{messageId} {
+      // Allow creating messages (from contact form)
+      allow create: if true;
+      
+      // Allow reading, updating, deleting messages only for authenticated users
+      allow read, update, delete: if request.auth != null;
+      
+      // Validate message data to prevent spam/abuse
+      allow create: if 
+        request.resource.data.name is string &&
+        request.resource.data.name.size() > 0 &&
+        request.resource.data.name.size() < 100 &&
+        
+        request.resource.data.email is string &&
+        request.resource.data.email.size() > 3 &&
+        request.resource.data.email.size() < 100 &&
+        request.resource.data.email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$') &&
+        
+        request.resource.data.message is string &&
+        request.resource.data.message.size() > 0 &&
+        request.resource.data.message.size() < 5000 &&
+        
+        // Optional subject field
+        (!('subject' in request.resource.data) || 
+          (request.resource.data.subject is string && 
+           request.resource.data.subject.size() < 200)
+        );
+    }
+    
+    // Admin settings collection - only authenticated users can access
+    match /admin/{document=**} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Default deny all other collections/documents
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+} 
